@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/joho/godotenv"
 	"stavi/internal/logger"
+	"strconv"
 )
 
 type Config struct {
@@ -34,6 +35,12 @@ type ConfigErr struct {
 func (cfg *Config) LoadEnv() ConfigErr {
 	// try to read the .env file in settings
 	env, err := godotenv.Read("./settings/.env")
+	if err != nil {
+		return ConfigErr{Err: err, Level: logger.FATAL}
+	}
+
+	// try to load app details into the config from env
+	cfg.Port, err = strconv.Atoi(env["PORT"])
 	if err != nil {
 		return ConfigErr{Err: err, Level: logger.FATAL}
 	}

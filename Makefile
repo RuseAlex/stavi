@@ -6,9 +6,9 @@ help:
 	@echo 'Usage:'
 	@sed -n 's/^##//p' ${MAKEFILE_LIST} | column -t -s ':' | sed -e 's/^/ /'
 
-## tidy: format code and tidy modfile
+## tidy: format code and tidy mod file
 tidy:
-	go fmt ./...
+	go mod vendor
 	go mod tidy -v
 
 ## test: test all the code and show the coverage
@@ -23,8 +23,4 @@ run:
 ## build: builds the application
 build:
 	go build -o=/tmp/bin/${BINARY_NAME} ${MAIN_PACKAGE_PATH}
-
-tidy:
-	go fmt ./...
-	go mod tidy -v
 

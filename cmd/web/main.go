@@ -10,7 +10,7 @@ import (
 )
 
 const VERSION = "1.0"
-const DEBUG = true
+const DEBUG_VALUE = true
 
 type Application struct {
 	cfg     config.Config
@@ -21,7 +21,7 @@ type Application struct {
 
 func (app *Application) serveHTTP() error {
 	srv := &http.Server{
-		Addr:              fmt.Sprintf(":%s", app.cfg.Port),
+		Addr:              fmt.Sprintf(":%d", app.cfg.Port),
 		Handler:           app.routes(),
 		IdleTimeout:       60 * time.Second,
 		ReadTimeout:       30 * time.Second,
@@ -31,7 +31,7 @@ func (app *Application) serveHTTP() error {
 
 	app.logger.Println(
 		logger.INFO,
-		fmt.Sprintf("starting HTTP server on port %s", app.cfg.Port),
+		fmt.Sprintf("starting HTTP server on port %d", app.cfg.Port),
 	)
 
 	return srv.ListenAndServe()
@@ -57,8 +57,8 @@ func (app *Application) serveHTTPS() error {
 
 func main() {
 	app := Application{
-		cfg:    config.Config{},
-		logger: logger.New(DEBUG, "./logs/test.log"),
+		cfg:    config.Config{Debug: DEBUG_VALUE},
+		logger: logger.New(DEBUG_VALUE, "./logs/test.log"),
 	}
 	// Load the configs and check if there are any problems
 	cfgErr := app.cfg.LoadEnv()
