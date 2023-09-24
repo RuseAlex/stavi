@@ -32,9 +32,20 @@ type ConfigErr struct {
 	Level logger.LogLevel
 }
 
-func (cfg *Config) LoadEnv() ConfigErr {
+func (cfg *Config) LoadEnv(envFile string) ConfigErr {
 	// try to read the .env file in settings
-	env, err := godotenv.Read("./settings/.env")
+	var env map[string]string
+	var err error
+
+	// if envFile location is not an empty string then read it, else resort to the default location
+	if envFile != "" {
+		env, err = godotenv.Read(envFile)
+		if err != nil {
+			return ConfigErr{Err: err, Level: logger.FATAL}
+		}
+	}
+
+	env, err = godotenv.Read("./settings/.env")
 	if err != nil {
 		return ConfigErr{Err: err, Level: logger.FATAL}
 	}
